@@ -1,17 +1,17 @@
 package com.example.pertemuan6.controller;
 
 import com.example.pertemuan6.model.User;
+import com.example.pertemuan6.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller
 public class UserController {
 
-    private List<User> dataMahasiswa = new ArrayList<>();
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/login")
     public String showLoginPage() {
@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("/home")
     public String showHomePage(Model model) {
-        model.addAttribute("mahasiswaList", dataMahasiswa);
+        model.addAttribute("mahasiswaList", userRepository.findAll());
         return "home";
     }
 
@@ -41,7 +41,7 @@ public class UserController {
 
     @PostMapping("/form")
     public String processForm(@ModelAttribute User user) {
-        dataMahasiswa.add(user);
+        userRepository.save(user);
         return "redirect:/home";
     }
 }
